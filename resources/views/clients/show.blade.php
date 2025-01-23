@@ -94,6 +94,40 @@
             background-color: #2980b9;
         }
 
+        .stock-info {
+        display: flex;
+        align-items: center; /* Menjaga elemen berada dalam satu baris */
+        background-color: #f4f4f4; /* Warna latar belakang */
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Efek bayangan */
+    }
+
+    .logo {
+        flex-shrink: 0; /* Agar logo tidak mengecil */
+        margin-right: 15px;
+    }
+
+    .logo-img {
+        width: 50px; /* Ukuran logo */
+        height: 50px;
+        object-fit: contain;
+    }
+
+    .stock-details {
+        display: flex;
+        flex-direction: column; /* Menata StockID dan StockName vertikal */
+    }
+
+    .stock-details p {
+        margin: 0; /* Menghilangkan margin default pada p */
+        font-size: 14px;
+    }
+
+    .stock-details p strong {
+        font-weight: bold;
+    }
+
         /* Responsif */
         @media (max-width: 600px) {
             .story-card {
@@ -114,17 +148,15 @@
                 <div class="tab active" data-tab="info">A</div>
                 <div class="tab" data-tab="contact">B</div>
                 <div class="tab" data-tab="email">C</div>
-                <div class="tab" data-tab="email">D</div>
-                <div class="tab" data-tab="email">E</div>
-                <div class="tab" data-tab="email">F</div>
-                <div class="tab" data-tab="email">G</div>
+                <div class="tab" data-tab="email1">D</div>
+                <div class="tab" data-tab="email2">E</div>
+                <div class="tab" data-tab="email3">F</div>
+                <div class="tab" data-tab="email4">G</div>
             </div>
 
             <!-- Tab Contents -->
             <div class="tab-content info active">
-                <!-- <h1>Informasi Client</h1> -->
                 @if($client)
-                    <!-- <p><strong>ID:</strong> {{ $client->ClientID }}</p> -->
                     <p><strong>Halo,</strong> {{ $client->ClientName }}</p>
                     <p>            Terima kasih telah bersama kami<br />
                         di sepanjang 2024! Tahun lalu,
@@ -140,15 +172,12 @@
             </div>
 
             <div class="tab-content contact">
-                <!-- <h1>Kontak Client</h1> -->
                 @if($client)
-                    <!-- <p><strong>ID:</strong> {{ $client->ClientID }}</p> -->
                     <p><strong>Halo,</strong> {{ $client->ClientName }}</p>
                     <p>Kamu bersama Alpha Sejak,</p>
-                    <!-- <p>{{ $client->CreatedDate }}</p> -->
                     <p>{{ \Carbon\Carbon::parse($client->CreatedDate)->format('d-m-Y') }}</p>
                     <p>
-                        Kamu telah bersama Alpha Investasi Selama hari. Wow!. Terima kasih telah
+                        Kamu telah bersama Alpha Investasi Selama {{ $client->days_registered }} hari. Wow!. Terima kasih telah
                         menjadi bagian dari perjalanan kami hingga saat ini.
                     </p>
                 @else
@@ -159,52 +188,63 @@
             <div class="tab-content email">
             <p>Frekuensi Transaksi<br/>kamu tahun 2024</p>
                 @if($client)
-                    <p><strong>ID:</strong> {{ $client->ClientID }}</p>
-                    <p><strong>NID:</strong> {{ $client->ClientNID }}</p>
-                    <p><strong>Email:</strong> {{ $client->Email }}</p>
+                    <p><strong>Tanggal Transaksi Terakhir</strong> {{ $client->ClientID }}</p>
+
+                @else
+                    <p>Data client tidak ditemukan.</p>
+                @endif
+</div>
+
+
+
+            <div class="tab-content email1">
+                <p>Perkembangan Aset<br/> dalam 2024</p>
+                @if($client)
+                <p><strong>Loss</strong> {{ number_format($client->percentage, 0) }}%</p> <!-- Menampilkan persentase tanpa desimal -->
+                <p><strong>Nilai Investasi Awal</strong> {{ $client->ClientID }}</p>
+                <p><strong>Loss</strong> {{ $client->total_value ?? 'Data tidak tersedia' }}</p>
+                    <p><strong>Total Investasi Sekarang</strong> {{ $client->Email }}</p>
                 @else
                     <p>Data client tidak ditemukan.</p>
                 @endif
             </div>
 
-            <div class="tab-content email">
-                <h1>Email Client1ppp</h1>
-                @if($client)
-                    <p><strong>ID:</strong> {{ $client->ClientID }}</p>
-                    <p><strong>Email:</strong> {{ $client->Email }}</p>
+            <div class="tab-content email2">
+                <p>Saham favoritmu di<br/> 2024</p>
+                <p>            Saham {{ $client->stock_data->StockID }} menjadi saham andalan<br />
+                        kamu di 2024!,
+                         Semoga dapat cuan banyak<br /> ya dari saham favorit kamu ini
+                    </p>
+                @if($client->stock_data)
+                    <!-- <h3>Informasi Saham Teratas</h3> -->
+                    <!-- <p><strong>StockNID:</strong> {{ $client->stock_data->StockNID }}</p> -->
+                    <p><strong></strong> {{ $client->stock_data->StockID }}</p>
+                    <p><strong></strong> {{ $client->stock_data->StockName }}</p>
+                    <!-- <p><strong>Frequency:</strong> {{ $client->stock_data->Freq }}</p> -->
                 @else
-                    <p>Data client tidak ditemukan.</p>
+                    <p>Tidak ada data saham untuk ditampilkan.</p>
                 @endif
             </div>
 
-            <div class="tab-content email">
-                <h1>Email Client1ppp</h1>
-                @if($client)
-                    <p><strong>ID:</strong> {{ $client->ClientID }}</p>
-                    <p><strong>Email:</strong> {{ $client->Email }}</p>
+            <div class="tab-content email3">
+                <p>Saham paling cuan di 2024</p>
+
+                <!-- Menampilkan Profit -->
+                @if($client->profit !== null)
+                    <p><strong>Profit:</strong> {{ number_format($client->profit, 2) }}</p>
                 @else
-                    <p>Data client tidak ditemukan.</p>
+                    <p><strong>Profit:</strong> Data tidak tersedia.</p>
                 @endif
             </div>
 
-            <div class="tab-content email">
-                <h1>Email Client1ppp</h1>
-                @if($client)
-                    <p><strong>ID:</strong> {{ $client->ClientID }}</p>
-                    <p><strong>Email:</strong> {{ $client->Email }}</p>
-                @else
-                    <p>Data client tidak ditemukan.</p>
-                @endif
-            </div>
-
-            <div class="tab-content email">
-                <h1>Email Client1ppp</h1>
-                @if($client)
-                    <p><strong>ID:</strong> {{ $client->ClientID }}</p>
-                    <p><strong>Email:</strong> {{ $client->Email }}</p>
-                @else
-                    <p>Data client tidak ditemukan.</p>
-                @endif
+            <div class="tab-content email4">
+                <p>Saham Paling Boncos di 2024</p>
+                    <!-- Menampilkan Loss -->
+                    @if($client->loss !== null)
+                        <p><strong>Loss:</strong> {{ number_format($client->loss, 2) }}</p>
+                    @else
+                        <p><strong>Loss:</strong> Data tidak tersedia.</p>
+                    @endif
             </div>
 
             <a href="{{ route('clients.index') }}" class="back-link">Kembali ke daftar</a>

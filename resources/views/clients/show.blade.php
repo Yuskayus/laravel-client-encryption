@@ -211,11 +211,11 @@
 
             <div class="tab-content email2">
                 <p>Saham favoritmu di<br/> 2024</p>
+                @if($client->stock_data)
                 <p>            Saham {{ $client->stock_data->StockID }} menjadi saham andalan<br />
                         kamu di 2024!,
                          Semoga dapat cuan banyak<br /> ya dari saham favorit kamu ini
                     </p>
-                @if($client->stock_data)
                     <!-- <h3>Informasi Saham Teratas</h3> -->
                     <!-- <p><strong>StockNID:</strong> {{ $client->stock_data->StockNID }}</p> -->
                     <p><strong></strong> {{ $client->stock_data->StockID }}</p>

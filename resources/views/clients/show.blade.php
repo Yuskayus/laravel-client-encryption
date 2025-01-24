@@ -213,10 +213,10 @@
 
             <div class="tab-content email1">
                 <p>Perkembangan Aset<br/> dalam 2024</p>
-                <p><strong>Nilai Investasi Awal (NIA):</strong> Rp{{ $client->nia }}</p>
-                <p><strong>Nilai Investasi Sekarang (NIS):</strong> Rp{{ $client->nis }}</p>
-                <p><strong>Profit/Loss (PL):</strong> Rp{{ $client->pl }}</p>
-                <p><strong>Loss (pct):</strong> {{ $client->loss_pct }}%</p>
+                <p><strong>Loss</strong> {{ $client->loss_pct }}%</p>
+                <p><strong>Nilai Investasi Awal </strong> Rp{{ $client->nia }}</p>
+                <p><strong>Loss</strong> Rp{{ $client->pl }}</p>
+                <p><strong>Nilai Investasi Sekarang</strong> Rp{{ $client->nis }}</p>
                 <!-- @if($client) -->
                 <!-- <p><strong>Nilai Investasi Awal</strong> {{ number_format($client->percentage, 0) }}%</p> Menampilkan persentase tanpa desimal -->
                 <!-- <p><strong>Nilai Investasi Awal</strong> {{ $client->ClientID }}</p> -->
@@ -247,22 +247,24 @@
             <div class="tab-content email3">
                 <p>Saham paling cuan di 2024</p>
 
-                <!-- Menampilkan Profit -->
-                @if($client->profit !== null)
-                    <p><strong>Profit:</strong> {{ number_format($client->profit, 2) }}</p>
+                 <!-- Menampilkan saham dengan profit terbesar -->
+                @if(isset($client->profit) && $client->profit)
+                    <p><strong>Saham (ID):</strong> {{ $client->profitStock }} (ID: {{ $client->profitStockId }})</p>
+                    <p><strong>Profit:</strong> Rp{{ number_format($client->profit, 2, ',', '.') }}</p>
                 @else
-                    <p><strong>Profit:</strong> Data tidak tersedia.</p>
+                    <p><strong>Saham:</strong> Data tidak tersedia.</p>
                 @endif
             </div>
 
             <div class="tab-content email4">
                 <p>Saham Paling Boncos di 2024</p>
-                    <!-- Menampilkan Loss -->
-                    @if($client->loss !== null)
-                        <p><strong>Loss:</strong> {{ number_format($client->loss, 2) }}</p>
-                    @else
-                        <p><strong>Loss:</strong> Data tidak tersedia.</p>
-                    @endif
+                <!-- Menampilkan saham dengan kerugian terbesar -->
+                @if(isset($client->loss) && $client->loss)
+                    <p><strong>Saham (ID):</strong> {{ $client->lossStock }} (ID: {{ $client->lossStockId }})</p>
+                    <p><strong>Loss:</strong> Rp{{ number_format($client->loss, 2, ',', '.') }}</p>
+                @else
+                    <p><strong>Saham:</strong> Data tidak tersedia.</p>
+                @endif
             </div>
 
             <a href="{{ route('clients.index') }}" class="back-link">Kembali ke daftar</a>

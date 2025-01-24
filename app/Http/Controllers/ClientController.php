@@ -118,57 +118,119 @@ class ClientController extends Controller
             $client->percentage = 0; // Set persentase ke 0 jika data tidak ada
         }
 
+        // // Query untuk mendapatkan Profit (PL terbesar)
+        // $profitResult = DB::select("
+        //     SELECT TOP 1
+        //         t.ClientNID,
+        //         t.StockNID,
+        //         SUM((t.TradePrice - ISNULL(cs.avgprice, 0)) * t.TradeVolume) / SUM(ISNULL(cs.avgprice, 0) * t.TradeVolume) AS pl
+        //     FROM S21Plus_PS.dbo.Trade t
+        //     OUTER APPLY (
+        //         SELECT TOP 1 cs.avgprice
+        //         FROM S21Plus_PS.dbo.ClientStock cs
+        //         WHERE cs.clientnid = t.clientnid
+        //         AND cs.stocknid = t.stocknid
+        //         AND cs.Date <= t.TradeDate
+        //         AND cs.avgprice > 0
+        //         ORDER BY cs.date DESC
+        //     ) cs
+        //     WHERE t.TradeDate >= '2024-01-01'
+        //         AND t.TradeDate <= '2024-12-31'
+        //         AND cs.avgprice > 0
+        //         AND t.ClientNID = ?
+        //     GROUP BY t.clientnid, t.stocknid
+        //     ORDER BY t.clientnid, pl DESC
+        // ", [$decryptedId]);
+
+        // // Query untuk mendapatkan Loss (PL terkecil)
+        // $lossResult = DB::select("
+        //     SELECT TOP 1
+        //         t.ClientNID,
+        //         t.StockNID,
+        //         SUM((t.TradePrice - ISNULL(cs.avgprice, 0)) * t.TradeVolume) / SUM(ISNULL(cs.avgprice, 0) * t.TradeVolume) AS pl
+        //     FROM S21Plus_PS.dbo.Trade t
+        //     OUTER APPLY (
+        //         SELECT TOP 1 cs.avgprice
+        //         FROM S21Plus_PS.dbo.ClientStock cs
+        //         WHERE cs.clientnid = t.clientnid
+        //         AND cs.stocknid = t.stocknid
+        //         AND cs.Date <= t.TradeDate
+        //         AND cs.avgprice > 0
+        //         ORDER BY cs.date DESC
+        //     ) cs
+        //     WHERE t.TradeDate >= '2024-01-01'
+        //         AND t.TradeDate <= '2024-12-31'
+        //         AND cs.avgprice > 0
+        //         AND t.ClientNID = ?
+        //     GROUP BY t.clientnid, t.stocknid
+        //     ORDER BY t.clientnid, pl ASC
+        // ", [$decryptedId]);
+
+        // // Simpan hasil Profit dan Loss ke dalam objek client
+        // $client->profit = isset($profitResult[0]) ? $profitResult[0]->pl : null;
+        // $client->loss = isset($lossResult[0]) ? $lossResult[0]->pl : null;
+
         // Query untuk mendapatkan Profit (PL terbesar)
         $profitResult = DB::select("
-            SELECT TOP 1
-                t.ClientNID,
-                t.StockNID,
-                SUM((t.TradePrice - ISNULL(cs.avgprice, 0)) * t.TradeVolume) / SUM(ISNULL(cs.avgprice, 0) * t.TradeVolume) AS pl
-            FROM S21Plus_PS.dbo.Trade t
-            OUTER APPLY (
-                SELECT TOP 1 cs.avgprice
-                FROM S21Plus_PS.dbo.ClientStock cs
-                WHERE cs.clientnid = t.clientnid
-                AND cs.stocknid = t.stocknid
-                AND cs.Date <= t.TradeDate
-                AND cs.avgprice > 0
-                ORDER BY cs.date DESC
-            ) cs
-            WHERE t.TradeDate >= '2024-01-01'
-                AND t.TradeDate <= '2024-12-31'
-                AND cs.avgprice > 0
-                AND t.ClientNID = ?
-            GROUP BY t.clientnid, t.stocknid
-            ORDER BY t.clientnid, pl DESC
+        SELECT TOP 1
+            t.ClientNID,
+            t.StockNID,
+            s.StockName,  -- Menambahkan nama saham
+            SUM((t.TradePrice - ISNULL(cs.avgprice, 0)) * t.TradeVolume) / SUM(ISNULL(cs.avgprice, 0) * t.TradeVolume) AS pl
+        FROM S21Plus_PS.dbo.Trade t
+        OUTER APPLY (
+            SELECT TOP 1 cs.avgprice
+            FROM S21Plus_PS.dbo.ClientStock cs
+            WHERE cs.clientnid = t.clientnid
+            AND cs.stocknid = t.stocknid
+            AND cs.Date <= t.TradeDate
+            AND cs.avgprice > 0
+            ORDER BY cs.date DESC
+        ) cs
+        LEFT JOIN S21Plus_PS.dbo.Stock s ON t.StockNID = s.StockNID  -- Gabungkan dengan tabel Stock untuk mengambil nama saham
+        WHERE t.TradeDate >= '2024-01-01'
+            AND t.TradeDate <= '2024-12-31'
+            AND cs.avgprice > 0
+            AND t.ClientNID = ?
+        GROUP BY t.clientnid, t.stocknid, s.StockName
+        ORDER BY t.clientnid, pl DESC
         ", [$decryptedId]);
 
-        // Query untuk mendapatkan Loss (PL terkecil)
+                // Query untuk mendapatkan Loss (PL terkecil)
         $lossResult = DB::select("
-            SELECT TOP 1
-                t.ClientNID,
-                t.StockNID,
-                SUM((t.TradePrice - ISNULL(cs.avgprice, 0)) * t.TradeVolume) / SUM(ISNULL(cs.avgprice, 0) * t.TradeVolume) AS pl
-            FROM S21Plus_PS.dbo.Trade t
-            OUTER APPLY (
-                SELECT TOP 1 cs.avgprice
-                FROM S21Plus_PS.dbo.ClientStock cs
-                WHERE cs.clientnid = t.clientnid
-                AND cs.stocknid = t.stocknid
-                AND cs.Date <= t.TradeDate
-                AND cs.avgprice > 0
-                ORDER BY cs.date DESC
-            ) cs
-            WHERE t.TradeDate >= '2024-01-01'
-                AND t.TradeDate <= '2024-12-31'
-                AND cs.avgprice > 0
-                AND t.ClientNID = ?
-            GROUP BY t.clientnid, t.stocknid
-            ORDER BY t.clientnid, pl ASC
+        SELECT TOP 1
+            t.ClientNID,
+            t.StockNID,
+            s.StockName,  -- Menambahkan nama saham
+            SUM((t.TradePrice - ISNULL(cs.avgprice, 0)) * t.TradeVolume) / SUM(ISNULL(cs.avgprice, 0) * t.TradeVolume) AS pl
+        FROM S21Plus_PS.dbo.Trade t
+        OUTER APPLY (
+            SELECT TOP 1 cs.avgprice
+            FROM S21Plus_PS.dbo.ClientStock cs
+            WHERE cs.clientnid = t.clientnid
+            AND cs.stocknid = t.stocknid
+            AND cs.Date <= t.TradeDate
+            AND cs.avgprice > 0
+            ORDER BY cs.date DESC
+        ) cs
+        LEFT JOIN S21Plus_PS.dbo.Stock s ON t.StockNID = s.StockNID  -- Gabungkan dengan tabel Stock untuk mengambil nama saham
+        WHERE t.TradeDate >= '2024-01-01'
+            AND t.TradeDate <= '2024-12-31'
+            AND cs.avgprice > 0
+            AND t.ClientNID = ?
+        GROUP BY t.clientnid, t.stocknid, s.StockName
+        ORDER BY t.clientnid, pl ASC
         ", [$decryptedId]);
 
         // Simpan hasil Profit dan Loss ke dalam objek client
         $client->profit = isset($profitResult[0]) ? $profitResult[0]->pl : null;
+        $client->profitStock = isset($profitResult[0]) ? $profitResult[0]->StockName : null;
+        $client->profitStockId = isset($profitResult[0]) ? $profitResult[0]->StockNID : null;  // Menambahkan StockNID
+
         $client->loss = isset($lossResult[0]) ? $lossResult[0]->pl : null;
+        $client->lossStock = isset($lossResult[0]) ? $lossResult[0]->StockName : null;
+        $client->lossStockId = isset($lossResult[0]) ? $lossResult[0]->StockNID : null;  // Menambahkan StockNID
+
 
         // Query untuk mendapatkan data StockNID, StockID, StockName, dan Freq
         $stockData = DB::select("

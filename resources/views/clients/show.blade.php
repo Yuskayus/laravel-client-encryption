@@ -158,6 +158,7 @@
             <div class="tab-content info active">
                 @if($client)
                     <p><strong>Halo,</strong> {{ $client->ClientName }}</p>
+                    <p><strong>Halo,</strong> {{ $client->ClientNID }}</p>
                     <p>            Terima kasih telah bersama kami<br />
                         di sepanjang 2024! Tahun lalu,
                         kita<br /> telah melewati berbagai momen<br /> menarik di dunia saham. Kami<br />
@@ -187,26 +188,43 @@
 
             <div class="tab-content email">
             <p>Frekuensi Transaksi<br/>kamu tahun 2024</p>
-                @if($client)
+            @if(isset($client->unique_transaction_days))
+                <p>Jumlah Hari Transaksi Unik (2024): {{ $client->unique_transaction_days }}</p>
+            @else
+                <p>Data jumlah hari transaksi unik tidak tersedia.</p>
+            @endif
+
+
+            @if($client->last_transaction_date)
+                <p>Tanggal Transaksi Terakhir: {{ $client->last_transaction_date }}</p>
+            @else
+                <p>Data tanggal transaksi terakhir tidak tersedia.</p>
+            @endif
+
+                <!-- @if($client)
                     <p><strong>Tanggal Transaksi Terakhir</strong> {{ $client->ClientID }}</p>
 
                 @else
                     <p>Data client tidak ditemukan.</p>
-                @endif
+                @endif -->
 </div>
 
 
 
             <div class="tab-content email1">
                 <p>Perkembangan Aset<br/> dalam 2024</p>
-                @if($client)
-                <p><strong>Loss</strong> {{ number_format($client->percentage, 0) }}%</p> <!-- Menampilkan persentase tanpa desimal -->
-                <p><strong>Nilai Investasi Awal</strong> {{ $client->ClientID }}</p>
-                <p><strong>Loss</strong> {{ $client->total_value ?? 'Data tidak tersedia' }}</p>
-                    <p><strong>Total Investasi Sekarang</strong> {{ $client->Email }}</p>
-                @else
-                    <p>Data client tidak ditemukan.</p>
-                @endif
+                <p><strong>Nilai Investasi Awal (NIA):</strong> Rp{{ $client->nia }}</p>
+                <p><strong>Nilai Investasi Sekarang (NIS):</strong> Rp{{ $client->nis }}</p>
+                <p><strong>Profit/Loss (PL):</strong> Rp{{ $client->pl }}</p>
+                <p><strong>Loss (pct):</strong> {{ $client->loss_pct }}%</p>
+                <!-- @if($client) -->
+                <!-- <p><strong>Nilai Investasi Awal</strong> {{ number_format($client->percentage, 0) }}%</p> Menampilkan persentase tanpa desimal -->
+                <!-- <p><strong>Nilai Investasi Awal</strong> {{ $client->ClientID }}</p> -->
+                <!-- <p><strong>Loss</strong> {{ $client->total_value ?? 'Data tidak tersedia' }}</p> -->
+                    <!-- <p><strong>Total Investasi Sekarang</strong> {{ $client->Email }}</p> -->
+                <!-- @else -->
+                    <!-- <p>Data client tidak ditemukan.</p> -->
+                <!-- @endif -->
             </div>
 
             <div class="tab-content email2">

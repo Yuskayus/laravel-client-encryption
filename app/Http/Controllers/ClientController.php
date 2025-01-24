@@ -202,6 +202,59 @@ class ClientController extends Controller
             $client->stock_data = null;
         }
 
+        // Query untuk mendapatkan tanggal transaksi terakhir dengan batasan tanggal
+        $lastTransactionDate = DB::table('S21Plus_PS.dbo.ClientTrx')
+            ->selectRaw('MAX(Date) as last_transaction_date')
+            ->where('ClientNID', $decryptedId)
+            ->where('Date', '<=', '2024-12-31') // Menambahkan batasan tanggal
+            ->groupBy('ClientNID')
+            ->value('last_transaction_date');
+
+        // Tambahkan data ke objek client
+        $client->last_transaction_date = $lastTransactionDate;
+
+        // Query untuk menghitung jumlah hari transaksi unik dalam rentang tanggal
+        $uniqueTransactionDays = DB::table('S21Plus_PS.dbo.ClientTrx')
+        ->where('ClientNID', $decryptedId)
+        ->whereBetween('Date', ['2024-01-01', '2024-12-31']) // Rentang tanggal
+        ->distinct()
+        ->count('Date'); // Menghitung jumlah tanggal unik
+
+        // Tambahkan hasil ke objek client
+        $client->unique_transaction_days = $uniqueTransactionDays;
+
+        // Query untuk Nilai Investasi Awal (NIA)
+        $niaData = DB::table('S21Plus_PS.dbo.ClientCash')
+            ->selectRaw('(Cash - Buy + Sell + MarketValue) AS NIA')
+            ->where('ClientNID', $decryptedId)
+            ->where('Date', '2024-01-01')
+            ->first();
+
+        // Query untuk Nilai Investasi Sekarang (NIS)
+        $nisData = DB::table('S21Plus_PS.dbo.ClientCash')
+            ->selectRaw('(Cash - Buy + Sell + MarketValue) AS NIS')
+            ->where('ClientNID', $decryptedId)
+            ->where('Date', '2024-12-31')
+            ->first();
+
+        // Format Nilai Investasi Awal dan Sekarang
+        $nia = isset($niaData->NIA) ? $niaData->NIA : 0;
+        $nis = isset($nisData->NIS) ? $nisData->NIS : 0;
+
+        // Hitung Profit/Loss (PL)
+        $pl = $nis - $nia;
+
+        // Hitung Loss (pct)
+        $lossPct = ($nia != 0) ? ($pl / $nia) * 100 : 0; // Hindari pembagian dengan 0
+
+        // Format hasil menjadi Rupiah dan Persentase
+        $client->nia = number_format($nia, 0, ',', '.');
+        $client->nis = number_format($nis, 0, ',', '.');
+        $client->pl = number_format($pl, 0, ',', '.');
+        $client->loss_pct = number_format($lossPct, 2, ',', '.'); // Format dengan 2 desimal
+
+
+
         // Query untuk mengambil data dinamis berdasarkan ClientNID
         // $clientData = DB::select("
         //     SELECT

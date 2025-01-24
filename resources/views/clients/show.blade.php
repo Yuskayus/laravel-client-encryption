@@ -3,54 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Client - Instagram Story</title>
+    <title>Swipeable Tabs Example</title>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            /* background-color: #f4f7fa; */
-            background-color: rgba(0, 0, 0, 0.5);
-            overflow: hidden;
-        }
-
-        .story-container {
-            display: flex;
-            justify-content: center;
-            /* background-color: rgba(0, 0, 0, 0.5); */
-            align-items: center;
-            height: 100vh;
-            background-color: #333;
-            position: relative;
-            padding: 20px;
-            box-sizing: border6-box;
-        }
-
-        .story-card {
-            width: 300px;  /* Lebar kotak dikurangi */
-            height: 500px;  /* Tinggi kotak dikurangi */
-            /* background-color: rgba(0, 0, 0, 0.5); */
-            background-color: white;
-            border-radius: 20px;
-            overflow: hidden;
-            position: relative;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease;
-        }
-
-        .story-card img {
-            width: 100%;
-            height: 70%;
-            object-fit: cover;
-            border-bottom: 5px solid #ddd;
-        }
-
+        /* Styling Tab dan Konten */
         .tabs {
             display: flex;
             justify-content: space-around;
             background-color: #f4f4f4;
             padding: 10px 0;
             border-bottom: 2px solid #ddd;
+            overflow: hidden; /* Mencegah tab melebihi batas */
         }
 
         .tab {
@@ -68,95 +32,58 @@
             border-radius: 10px;
         }
 
+        .swiper-container {
+            width: 100%;
+            height: 300px; /* Batasi tinggi area swiper */
+            overflow: hidden; /* Mencegah halaman ter-scroll */
+        }
+
+        .swiper-wrapper {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .swiper-slide {
+            height: 100%;  /* Sesuaikan tinggi agar tidak ada scroll */
+            background: #f9f9f9;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         .tab-content {
             padding: 20px;
-            display: none;
+            height: 100%;
+            overflow: auto; /* Mencegah scroll horizontal */
         }
 
-        .tab-content.active {
-            display: block;
-        }
-
-        .back-link {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+        .tab.active {
             background-color: #3498db;
             color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-size: 16px;
-        }
-
-        .back-link:hover {
-            background-color: #2980b9;
-        }
-
-        .stock-info {
-        display: flex;
-        align-items: center; /* Menjaga elemen berada dalam satu baris */
-        background-color: #f4f4f4; /* Warna latar belakang */
-        padding: 10px;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Efek bayangan */
-    }
-
-    .logo {
-        flex-shrink: 0; /* Agar logo tidak mengecil */
-        margin-right: 15px;
-    }
-
-    .logo-img {
-        width: 50px; /* Ukuran logo */
-        height: 50px;
-        object-fit: contain;
-    }
-
-    .stock-details {
-        display: flex;
-        flex-direction: column; /* Menata StockID dan StockName vertikal */
-    }
-
-    .stock-details p {
-        margin: 0; /* Menghilangkan margin default pada p */
-        font-size: 14px;
-    }
-
-    .stock-details p strong {
-        font-weight: bold;
-    }
-
-        /* Responsif */
-        @media (max-width: 600px) {
-            .story-card {
-                width: 250px;
-                height: 450px;
-            }
         }
     </style>
 </head>
 <body>
 
-    <div class="story-container">
-        <div class="story-card">
-            <!-- <img src="https://via.placeholder.com/300x200" alt="Client Picture"> -->
+ <!-- Tabs -->
+<div class="tabs">
+    <div class="tab active" data-tab="info">A</div>
+    <div class="tab" data-tab="contact">B</div>
+    <div class="tab" data-tab="email">C</div>
+    <div class="tab" data-tab="email1">D</div>
+    <div class="tab" data-tab="email2">E</div>
+    <div class="tab" data-tab="email3">F</div>
+    <div class="tab" data-tab="email4">G</div>
+</div>
 
-            <!-- Tabs -->
-            <div class="tabs">
-                <div class="tab active" data-tab="info">A</div>
-                <div class="tab" data-tab="contact">B</div>
-                <div class="tab" data-tab="email">C</div>
-                <div class="tab" data-tab="email1">D</div>
-                <div class="tab" data-tab="email2">E</div>
-                <div class="tab" data-tab="email3">F</div>
-                <div class="tab" data-tab="email4">G</div>
-            </div>
-
-            <!-- Tab Contents -->
-            <div class="tab-content info active">
-                @if($client)
+<!-- Swiper Container untuk Konten -->
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+        <!-- Konten Tab A -->
+        <div class="swiper-slide" id="info">
+            <div class="tab-content">
+            @if($client)
                     <p><strong>Halo,</strong> {{ $client->ClientName }}</p>
                     <p><strong>Halo,</strong> {{ $client->ClientNID }}</p>
                     <p>            Terima kasih telah bersama kami<br />
@@ -171,9 +98,11 @@
                     <p>Data client tidak ditemukan.</p>
                 @endif
             </div>
-
-            <div class="tab-content contact">
-                @if($client)
+        </div>
+        <!-- Konten Tab B -->
+        <div class="swiper-slide" id="contact">
+            <div class="tab-content">
+            @if($client)
                     <p><strong>Halo,</strong> {{ $client->ClientName }}</p>
                     <p>Kamu bersama Alpha Sejak,</p>
                     <p>{{ \Carbon\Carbon::parse($client->CreatedDate)->format('d-m-Y') }}</p>
@@ -185,8 +114,10 @@
                     <p>Data client tidak ditemukan.</p>
                 @endif
             </div>
-
-            <div class="tab-content email">
+        </div>
+        <!-- Konten Tab C -->
+        <div class="swiper-slide" id="email">
+            <div class="tab-content">
             <p>Frekuensi Transaksi<br/>kamu tahun 2024</p>
             @if(isset($client->unique_transaction_days))
                 <p>Jumlah Hari Transaksi Unik (2024): {{ $client->unique_transaction_days }}</p>
@@ -200,35 +131,22 @@
             @else
                 <p>Data tanggal transaksi terakhir tidak tersedia.</p>
             @endif
-
-                <!-- @if($client)
-                    <p><strong>Tanggal Transaksi Terakhir</strong> {{ $client->ClientID }}</p>
-
-                @else
-                    <p>Data client tidak ditemukan.</p>
-                @endif -->
-</div>
-
-
-
-            <div class="tab-content email1">
-                <p>Perkembangan Aset<br/> dalam 2024</p>
+            </div>
+        </div>
+        <!-- Konten Tab D -->
+        <div class="swiper-slide" id="email1">
+            <div class="tab-content">
+            <p>Perkembangan Aset<br/> dalam 2024</p>
                 <p><strong>Loss</strong> {{ $client->loss_pct }}%</p>
                 <p><strong>Nilai Investasi Awal </strong> Rp{{ $client->nia }}</p>
                 <p><strong>Loss</strong> Rp{{ $client->pl }}</p>
                 <p><strong>Nilai Investasi Sekarang</strong> Rp{{ $client->nis }}</p>
-                <!-- @if($client) -->
-                <!-- <p><strong>Nilai Investasi Awal</strong> {{ number_format($client->percentage, 0) }}%</p> Menampilkan persentase tanpa desimal -->
-                <!-- <p><strong>Nilai Investasi Awal</strong> {{ $client->ClientID }}</p> -->
-                <!-- <p><strong>Loss</strong> {{ $client->total_value ?? 'Data tidak tersedia' }}</p> -->
-                    <!-- <p><strong>Total Investasi Sekarang</strong> {{ $client->Email }}</p> -->
-                <!-- @else -->
-                    <!-- <p>Data client tidak ditemukan.</p> -->
-                <!-- @endif -->
             </div>
-
-            <div class="tab-content email2">
-                <p>Saham favoritmu di<br/> 2024</p>
+        </div>
+        <!-- Konten Tab E -->
+        <div class="swiper-slide" id="email2">
+            <div class="tab-content">
+            <p>Saham favoritmu di<br/> 2024</p>
                 @if($client->stock_data)
                 <p>            Saham {{ $client->stock_data->StockID }} menjadi saham andalan<br />
                         kamu di 2024!,
@@ -243,21 +161,25 @@
                     <p>Tidak ada data saham untuk ditampilkan.</p>
                 @endif
             </div>
+        </div>
+        <!-- Konten Tab F -->
+        <div class="swiper-slide" id="email3">
+            <div class="tab-content">
+            <p>Saham paling cuan di 2024</p>
 
-            <div class="tab-content email3">
-                <p>Saham paling cuan di 2024</p>
-
-                 <!-- Menampilkan saham dengan profit terbesar -->
-                @if(isset($client->profit) && $client->profit)
-                    <p><strong>Saham (ID):</strong> {{ $client->profitStock }} (ID: {{ $client->profitStockId }})</p>
-                    <p><strong>Profit:</strong> Rp{{ number_format($client->profit, 2, ',', '.') }}</p>
-                @else
-                    <p><strong>Saham:</strong> Data tidak tersedia.</p>
-                @endif
+<!-- Menampilkan saham dengan profit terbesar -->
+@if(isset($client->profit) && $client->profit)
+   <p><strong>Saham (ID):</strong> {{ $client->profitStock }} (ID: {{ $client->profitStockId }})</p>
+   <p><strong>Profit:</strong> Rp{{ number_format($client->profit, 2, ',', '.') }}</p>
+@else
+   <p><strong>Saham:</strong> Data tidak tersedia.</p>
+@endif
             </div>
-
-            <div class="tab-content email4">
-                <p>Saham Paling Boncos di 2024</p>
+        </div>
+        <!-- Konten Tab G -->
+        <div class="swiper-slide" id="email4">
+            <div class="tab-content">
+            <p>Saham Paling Boncos di 2024</p>
                 <!-- Menampilkan saham dengan kerugian terbesar -->
                 @if(isset($client->loss) && $client->loss)
                     <p><strong>Saham (ID):</strong> {{ $client->lossStock }} (ID: {{ $client->lossStockId }})</p>
@@ -266,26 +188,45 @@
                     <p><strong>Saham:</strong> Data tidak tersedia.</p>
                 @endif
             </div>
-
-            <a href="{{ route('clients.index') }}" class="back-link">Kembali ke daftar</a>
         </div>
     </div>
+</div>
 
-    <script>
-        // Script untuk menangani tab navigation
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                // Menghapus kelas 'active' dari semua tab dan tab-content
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+<!-- Tambahkan Swiper JS -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
-                // Menambahkan kelas 'active' pada tab yang dipilih
-                this.classList.add('active');
-                const tabContent = document.querySelector('.' + this.getAttribute('data-tab'));
-                tabContent.classList.add('active');
-            });
+<script>
+    // Inisialisasi Swiper
+    const swiper = new Swiper('.swiper-container', {
+        direction: 'horizontal',  // Navigasi horizontal
+        loop: false,              // Tidak looping
+        slidesPerView: 1,         // Menampilkan satu slide per tampilan
+        spaceBetween: 0,          // Tidak ada jarak antar slide
+        touchRatio: 1,            // Menyentuh untuk menggeser
+        grabCursor: true,        // Menampilkan kursor geser
+        noSwiping: false,        // Membolehkan swipe
+        on: {
+            slideChange: function () {
+                // Menyembunyikan kelas 'active' pada tab sebelumnya
+                const activeTab = document.querySelector('.tab.active');
+                if (activeTab) activeTab.classList.remove('active');
+
+                // Menambahkan kelas 'active' pada tab sesuai dengan slide yang aktif
+                const currentSlide = swiper.slides[swiper.activeIndex];
+                const currentTab = document.querySelector(`.tab[data-tab="${currentSlide.id}"]`);
+                if (currentTab) currentTab.classList.add('active');
+            }
+        }
+    });
+
+    // Event listener untuk tab yang dipilih
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach((tab, index) => {
+        tab.addEventListener('click', () => {
+            swiper.slideTo(index);  // Pindah ke slide yang sesuai saat tab diklik
         });
-    </script>
+    });
+</script>
 
 </body>
 </html>

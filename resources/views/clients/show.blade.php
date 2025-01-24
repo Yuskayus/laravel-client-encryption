@@ -34,7 +34,7 @@
 
         .swiper-container {
             width: 100%;
-            height: 300px; /* Batasi tinggi area swiper */
+            height: 400px; /* Batasi tinggi area swiper */
             overflow: hidden; /* Mencegah halaman ter-scroll */
         }
 
@@ -46,10 +46,12 @@
         .swiper-slide {
             height: 100%;  /* Sesuaikan tinggi agar tidak ada scroll */
             background: #f9f9f9;
-            padding: 20px;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            justify-content: center; /* Horizontally center the content */
+            align-items: center;     /* Vertically center the content */
+            text-align: center;      /* Center the text inside the slide */
+            padding: 20px;           /* Optional: untuk memberikan jarak pada teks */
+            box-sizing: border-box;  /* Memastikan padding tidak mempengaruhi ukuran total */
         }
 
         .tab-content {

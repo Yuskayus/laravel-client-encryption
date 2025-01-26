@@ -233,7 +233,7 @@
                 @else
                     <p>Data client tidak ditemukan.</p>
                 @endif
-                <button class="btn-share-image" data-target="info">
+                <button class="btn-share-image" data-target="contact">
                     Share as Image
                 </button>
             </div>
@@ -258,7 +258,7 @@
             @else
                 <p>Data tanggal transaksi terakhir tidak tersedia.</p>
             @endif
-            <button class="btn-share-image" data-target="info">
+            <button class="btn-share-image" data-target="email">
                     Share as Image
             </button>
             </div>
@@ -275,7 +275,7 @@
                 <p><strong>Nilai Investasi Awal </strong> Rp{{ $client->nia }}</p>
                 <p><strong>Loss</strong> Rp{{ $client->pl }}</p>
                 <p><strong>Nilai Investasi Sekarang</strong> Rp{{ $client->nis }}</p>
-                <button class="btn-share-image" data-target="info">
+                <button class="btn-share-image" data-target="email1">
                     Share as Image
                 </button>
             </div>
@@ -301,7 +301,7 @@
                 @else
                     <p>Tidak ada data saham untuk ditampilkan.</p>
                 @endif
-                <button class="btn-share-image" data-target="info">
+                <button class="btn-share-image" data-target="email2">
                     Share as Image
                 </button>
             </div>
@@ -322,7 +322,7 @@
 @else
    <p><strong>Saham:</strong> Data tidak tersedia.</p>
 @endif
-<button class="btn-share-image" data-target="info">
+<button class="btn-share-image" data-target="email3">
                     Share as Image
                 </button>
             </div>
@@ -342,7 +342,7 @@
                 @else
                     <p><strong>Saham:</strong> Data tidak tersedia.</p>
                 @endif
-                <button class="btn-share-image" data-target="info">
+                <button class="btn-share-image" data-target="email4">
                     Share as Image
                 </button>
             </div>

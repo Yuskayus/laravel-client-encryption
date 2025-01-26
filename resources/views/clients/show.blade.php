@@ -6,6 +6,7 @@
     <title>Swipeable Tabs Example</title>
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         /* Background berdasarkan data-tab */
 .tab[data-tab="info"] {
@@ -31,68 +32,87 @@
     background-size: cover;
     background-position: center;
 }
-        /* Styling Tab dan Konten */
-        .tabs {
-            display: flex;
-            justify-content: space-around;
-            background-color: #f4f4f4;
-            padding: 10px 0;
-            border-bottom: 2px solid #ddd;
-            overflow: hidden; /* Mencegah tab melebihi batas */
-        }
+    /* Styling Tab dan Konten */
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    background-color: #f4f4f4;
+    padding: 10px 0;
+    border-bottom: 2px solid #ddd;
+    overflow: hidden; /* Mencegah tab melebihi batas */
+}
 
-        .tab {
-            padding: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            color: #333;
-            text-align: center;
-            flex: 1;
-        }
+.tab {
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+    flex: 1;
+}
 
-        .tab.active {
-            background-color: #3498db;
-            color: white;
-            border-radius: 10px;
-        }
+.tab.active {
+    background-color: #3498db;
+    color: white;
+    border-radius: 10px;
+}
 
 /* Kontainer utama swiper */
 .swiper-container {
     width: 100%;
-    height: 400px; /* Batasi tinggi area swiper */
+    height: 100vh; /* Ubah menjadi tinggi layar penuh */
     overflow: hidden; /* Mencegah halaman ter-scroll */
+    display: flex; /* Pastikan kontainer mengikuti aturan flex */
+    justify-content: center; /* Pusatkan konten */
 }
 
 /* Wrapper swiper */
 .swiper-wrapper {
-    display: flex; /* Swiper sudah default menggunakan flex */
-    flex-direction: row; /* Pastikan slide tetap berbaris horizontal */
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%; /* Pastikan wrapper mengisi seluruh tinggi kontainer */
 }
 
 /* Slide swiper */
 .swiper-slide {
-    display: flex; /* Aktifkan flexbox di dalam slide */
+    display: flex; /* Flexbox untuk elemen di dalam slide */
     justify-content: center; /* Pusatkan konten secara horizontal */
     align-items: center; /* Pusatkan konten secara vertikal */
-    text-align: center; /* Pusatkan teks */
-    position: relative; /* Agar teks dan latar bisa diatur terpisah */
+    text-align: center;
+    position: relative;
     background-size: cover; /* Gambar memenuhi area */
     background-position: center; /* Pusatkan gambar */
-    color: #fff; /* Warna teks */
-    z-index: 0; /* Latar tetap berada di bawah */
+    color: #fff;
+    z-index: 0;
+    height: 100%; /* Pastikan slide mengisi seluruh kontainer */
 }
 
 /* Konten teks di dalam slide */
 .swiper-slide .tab-content {
-    position: relative; /* Agar tidak merusak fungsi swipe */
-    z-index: 1; /* Tetap berada di atas latar belakang */
-    padding: 20px; /* Beri jarak aman */
-    background-color: rgba(0, 0, 0, 0.5); /* Tambahkan latar transparan */
-    border-radius: 8px; /* Sudut melengkung untuk latar teks */
-    max-width: 80%; /* Batasi lebar teks agar tidak terlalu memenuhi slide */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Tambahkan bayangan */
+    position: relative;
+    z-index: 1;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    max-width: 80%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
+/* Logo dalam slide */
+.slide-logo {
+    max-width: 100px;
+    height: auto;
+    margin-bottom: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    object-fit: contain;
+    flex-shrink: 0; /* Mencegah logo mengecil */
+}
+
+/* Background image */
 .background-image {
     position: absolute;
     top: 0;
@@ -103,25 +123,53 @@
     z-index: 0;
 }
 
-
-
-
-
-        .tab.active {
-            background-color: #3498db;
-            color: white;
-        }
-
-        /* Logo dalam slide */
-.slide-logo {
-    max-width: 100px; /* Atur lebar maksimal logo */
-    height: auto; /* Sesuaikan tinggi secara proporsional */
-    margin-bottom: 20px; /* Jarak antara logo dan teks */
-    display: block; /* Pastikan logo menjadi blok agar lebih mudah diatur */
-    margin-left: auto; /* Pusatkan logo secara horizontal */
-    margin-right: auto;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)); /* Opsional: Tambahkan efek bayangan */
+/* Konten dalam tab */
+.tab-content {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    text-align: center;
 }
+
+/* Tombol share image */
+.btn-share-image {
+    margin-top: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-sizing: border-box;
+    display: inline-block;
+}
+
+/* Efek hover pada tombol */
+.btn-share-image:hover {
+    background-color: #218838;
+    transform: translateY(-3px);
+}
+
+/* Responsif: Menyesuaikan ukuran tab content dan tombol pada perangkat kecil */
+@media (max-width: 768px) {
+    .tab-content {
+        padding: 15px;
+    }
+
+    .btn-share-image {
+        width: 100%;
+        padding: 12px;
+        font-size: 18px;
+    }
+
+    .slide-logo {
+        max-height: 60px;
+    }
+}
+
+
     </style>
 </head>
 <body>
@@ -149,7 +197,7 @@
             <img src="/images/Logo.svg" alt="Logo Slide 1" class="slide-logo" />
             @if($client)
                     <p><strong>Halo,</strong> {{ $client->ClientName }}</p>
-                    <p><strong>Halo,</strong> {{ $client->ClientNID }}</p>
+                    <!-- <p><strong>Halo,</strong> {{ $client->ClientNID }}</p> -->
                     <p>            Terima kasih telah bersama kami<br />
                         di sepanjang 2024! Tahun lalu,
                         kita<br /> telah melewati berbagai momen<br /> menarik di dunia saham. Kami<br />
@@ -161,6 +209,10 @@
                 @else
                     <p>Data client tidak ditemukan.</p>
                 @endif
+                <button class="btn-share-image" data-target="info">
+    Share as Image
+</button>
+
             </div>
         </div>
         <!-- Konten Tab B -->
@@ -331,6 +383,32 @@
     const activeTab = document.querySelector(`.tab[data-tab="${currentSlide.id}"]`);
     activeTab?.classList.add('active');
 });
+
+//share social media
+document.addEventListener("DOMContentLoaded", function () {
+        const shareButtons = document.querySelectorAll(".btn-share-image");
+
+        shareButtons.forEach((button) => {
+            button.addEventListener("click", function () {
+                const targetId = this.getAttribute("data-target"); // Ambil ID elemen target
+                const targetElement = document.getElementById(targetId);
+
+                if (targetElement) {
+                    // Gunakan html2canvas untuk menangkap elemen
+                    html2canvas(targetElement).then((canvas) => {
+                        // Konversi canvas ke data URL
+                        const imageData = canvas.toDataURL("image/png");
+
+                        // Buat elemen link untuk mengunduh gambar
+                        const link = document.createElement("a");
+                        link.href = imageData;
+                        link.download = "slide-share.png"; // Nama file yang akan diunduh
+                        link.click();
+                    });
+                }
+            });
+        });
+    });
 
 </script>
 

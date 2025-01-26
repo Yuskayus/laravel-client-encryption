@@ -56,31 +56,43 @@
             border-radius: 10px;
         }
 
-        .swiper-container {
-            width: 100%;
-            height: 400px; /* Batasi tinggi area swiper */
-            overflow: hidden; /* Mencegah halaman ter-scroll */
-        }
+/* Kontainer utama swiper */
+.swiper-container {
+    width: 100%;
+    height: 400px; /* Batasi tinggi area swiper */
+    overflow: hidden; /* Mencegah halaman ter-scroll */
+}
 
-        .swiper-wrapper {
-            display: flex;
-            flex-direction: row;
-        }
-        .swiper-slide {
-    position: relative; /* Agar teks dan latar belakang dapat diatur secara independen */
+/* Wrapper swiper */
+.swiper-wrapper {
+    display: flex; /* Swiper sudah default menggunakan flex */
+    flex-direction: row; /* Pastikan slide tetap berbaris horizontal */
+}
+
+/* Slide swiper */
+.swiper-slide {
+    display: flex; /* Aktifkan flexbox di dalam slide */
+    justify-content: center; /* Pusatkan konten secara horizontal */
+    align-items: center; /* Pusatkan konten secara vertikal */
+    text-align: center; /* Pusatkan teks */
+    position: relative; /* Agar teks dan latar bisa diatur terpisah */
     background-size: cover; /* Gambar memenuhi area */
     background-position: center; /* Pusatkan gambar */
-    z-index: 0; /* Pastikan latar belakang berada di bawah */
-    color: #fff; /* Sesuaikan warna teks agar terlihat jelas */
+    color: #fff; /* Warna teks */
+    z-index: 0; /* Latar tetap berada di bawah */
 }
 
+/* Konten teks di dalam slide */
 .swiper-slide .tab-content {
-    position: relative; /* Tetap di atas latar belakang */
-    z-index: 1; /* Berada di atas gambar */
-    padding: 20px; /* Jarak aman untuk teks */
-    background-color: rgba(0, 0, 0, 0.5); /* Opsional: Tambahkan latar transparan untuk teks */
-    border-radius: 8px; /* Opsional: Tambahkan sudut melengkung pada latar teks */
+    position: relative; /* Agar tidak merusak fungsi swipe */
+    z-index: 1; /* Tetap berada di atas latar belakang */
+    padding: 20px; /* Beri jarak aman */
+    background-color: rgba(0, 0, 0, 0.5); /* Tambahkan latar transparan */
+    border-radius: 8px; /* Sudut melengkung untuk latar teks */
+    max-width: 80%; /* Batasi lebar teks agar tidak terlalu memenuhi slide */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Tambahkan bayangan */
 }
+
 .background-image {
     position: absolute;
     top: 0;
@@ -99,6 +111,17 @@
             background-color: #3498db;
             color: white;
         }
+
+        /* Logo dalam slide */
+.slide-logo {
+    max-width: 100px; /* Atur lebar maksimal logo */
+    height: auto; /* Sesuaikan tinggi secara proporsional */
+    margin-bottom: 20px; /* Jarak antara logo dan teks */
+    display: block; /* Pastikan logo menjadi blok agar lebih mudah diatur */
+    margin-left: auto; /* Pusatkan logo secara horizontal */
+    margin-right: auto;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)); /* Opsional: Tambahkan efek bayangan */
+}
     </style>
 </head>
 <body>
@@ -123,6 +146,7 @@
         <div class="swiper-slide" id="info" >
         <img src="/images/Backround1.svg" alt="Background" class="background-image">
             <div class="tab-content">
+            <img src="/images/Logo.svg" alt="Logo Slide 1" class="slide-logo" />
             @if($client)
                     <p><strong>Halo,</strong> {{ $client->ClientName }}</p>
                     <p><strong>Halo,</strong> {{ $client->ClientNID }}</p>
@@ -144,6 +168,8 @@
         <img src="/images/Backround2.svg" alt="Background" class="background-image">
 
             <div class="tab-content">
+            <img src="/images/Logo.svg" alt="Logo Slide 1" class="slide-logo" />
+
             @if($client)
                     <p><strong>Halo,</strong> {{ $client->ClientName }}</p>
                     <p>Kamu bersama Alpha Sejak,</p>
@@ -162,6 +188,8 @@
         <img src="/images/Backround3.svg" alt="Background" class="background-image">
 
             <div class="tab-content">
+            <img src="/images/Logo.svg" alt="Logo Slide 1" class="slide-logo" />
+
             <p>Frekuensi Transaksi<br/>kamu tahun 2024</p>
             @if(isset($client->unique_transaction_days))
                 <p>Jumlah Hari Transaksi Unik (2024): {{ $client->unique_transaction_days }}</p>
@@ -182,6 +210,8 @@
         <img src="/images/Backround4.svg" alt="Background" class="background-image">
 
             <div class="tab-content">
+            <img src="/images/Logo.svg" alt="Logo Slide 1" class="slide-logo" />
+
             <p>Perkembangan Aset<br/> dalam 2024</p>
                 <p><strong>Loss</strong> {{ $client->loss_pct }}%</p>
                 <p><strong>Nilai Investasi Awal </strong> Rp{{ $client->nia }}</p>
@@ -194,6 +224,8 @@
         <img src="/images/Backround5.svg" alt="Background" class="background-image">
 
             <div class="tab-content">
+            <img src="/images/Logo.svg" alt="Logo Slide 1" class="slide-logo" />
+
             <p>Saham favoritmu di<br/> 2024</p>
                 @if($client->stock_data)
                 <p>            Saham {{ $client->stock_data->StockID }} menjadi saham andalan<br />
@@ -215,6 +247,8 @@
         <img src="/images/Backround6.svg" alt="Background" class="background-image">
 
             <div class="tab-content">
+            <img src="/images/Logo.svg" alt="Logo Slide 1" class="slide-logo" />
+
             <p>Saham paling cuan di 2024</p>
 
 <!-- Menampilkan saham dengan profit terbesar -->
@@ -231,6 +265,8 @@
         <img src="/images/Backround7.svg" alt="Background" class="background-image">
 
             <div class="tab-content">
+            <img src="/images/Logo.svg" alt="Logo Slide 1" class="slide-logo" />
+
             <p>Saham Paling Boncos di 2024</p>
                 <!-- Menampilkan saham dengan kerugian terbesar -->
                 @if(isset($client->loss) && $client->loss)

@@ -210,8 +210,8 @@
                     <p>Data client tidak ditemukan.</p>
                 @endif
                 <button class="btn-share-image" data-target="info">
-    Share as Image
-</button>
+                    Share as Image
+                </button>
 
             </div>
         </div>
@@ -233,6 +233,9 @@
                 @else
                     <p>Data client tidak ditemukan.</p>
                 @endif
+                <button class="btn-share-image" data-target="info">
+                    Share as Image
+                </button>
             </div>
         </div>
         <!-- Konten Tab C -->
@@ -255,6 +258,9 @@
             @else
                 <p>Data tanggal transaksi terakhir tidak tersedia.</p>
             @endif
+            <button class="btn-share-image" data-target="info">
+                    Share as Image
+            </button>
             </div>
         </div>
         <!-- Konten Tab D -->
@@ -269,6 +275,9 @@
                 <p><strong>Nilai Investasi Awal </strong> Rp{{ $client->nia }}</p>
                 <p><strong>Loss</strong> Rp{{ $client->pl }}</p>
                 <p><strong>Nilai Investasi Sekarang</strong> Rp{{ $client->nis }}</p>
+                <button class="btn-share-image" data-target="info">
+                    Share as Image
+                </button>
             </div>
         </div>
         <!-- Konten Tab E -->
@@ -292,6 +301,9 @@
                 @else
                     <p>Tidak ada data saham untuk ditampilkan.</p>
                 @endif
+                <button class="btn-share-image" data-target="info">
+                    Share as Image
+                </button>
             </div>
         </div>
         <!-- Konten Tab F -->
@@ -310,6 +322,9 @@
 @else
    <p><strong>Saham:</strong> Data tidak tersedia.</p>
 @endif
+<button class="btn-share-image" data-target="info">
+                    Share as Image
+                </button>
             </div>
         </div>
         <!-- Konten Tab G -->
@@ -327,6 +342,9 @@
                 @else
                     <p><strong>Saham:</strong> Data tidak tersedia.</p>
                 @endif
+                <button class="btn-share-image" data-target="info">
+                    Share as Image
+                </button>
             </div>
         </div>
     </div>

@@ -130,6 +130,15 @@
     border-radius: 8px;
     text-align: center;
 }
+.tab-contentp {
+    padding: 20px; /* Jarak dalam kotak */
+        background: rgba(255, 255, 255, 0.3); /* Transparansi putih */
+        border-radius: 10px; /* Membuat sudut melengkung */
+        position: relative;
+        text-align: center;
+        box-shadow: inset 0 0 0 2px white; /* Bingkai putih tipis di dalam */
+        box-sizing: border-box;
+}
 
 /* Tombol share image */
 .btn-share-image {
@@ -198,7 +207,7 @@
             @if($client)
                     <p><strong>Halo,</strong> {{ $client->ClientName }}</p>
                     <!-- <p><strong>Halo,</strong> {{ $client->ClientNID }}</p> -->
-                    <p>            Terima kasih telah bersama kami<br />
+                    <p class="tab-contentp">            Terima kasih telah bersama kami<br />
                         di sepanjang 2024! Tahun lalu,
                         kita<br /> telah melewati berbagai momen<br /> menarik di dunia saham. Kami<br />
                         sangat menghargai kepercayaan<br /> Anda sebagai nasabah di Alpha<br />
@@ -224,7 +233,7 @@
 
             @if($client)
                     <p><strong>Halo,</strong> {{ $client->ClientName }}</p>
-                    <p>Kamu bersama Alpha Sejak,</p>
+                    <p >Kamu bersama Alpha Sejak,</p>
                     <p>{{ \Carbon\Carbon::parse($client->CreatedDate)->format('d-m-Y') }}</p>
                     <p>
                         Kamu telah bersama Alpha Investasi Selama {{ $client->days_registered }} hari. Wow!. Terima kasih telah
